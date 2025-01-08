@@ -19,6 +19,9 @@ jobs:
         with:
           ref: ${{ github.event.inputs.branch }}
 
+      - name: Set Environment Variables
+        run: echo "REACT_APP_BACKEND_URL=https://your-backend-url" >> $GITHUB_ENV
+
       # Step 2: Set up Node.js
       - name: Set up Node.js
         uses: actions/setup-node@v3
@@ -53,29 +56,21 @@ jobs:
           NODE_ENV: production
 
       # Step 6: Install and Run Ngrok
-      - name: Install and Run Ngrok
+      - name: Start Ngrok
         run: |
           curl -s https://ngrok-agent.s3.amazonaws.com/ngrok.asc | sudo tee /etc/apt/trusted.gpg.d/ngrok.asc >/dev/null
           echo "deb https://ngrok-agent.s3.amazonaws.com buster main" | sudo tee /etc/apt/sources.list.d/ngrok.list >/dev/null
           sudo apt update && sudo apt install ngrok
-          nohup ngrok http 5000 > ngrok.log 2>&1 &
+          ngrok config add-authtoken ${{ secrets.NGROK_AUTH_TOKEN }}
+          ngrok http 5000 > ngrok.log 2>&1 &
         env:
-          NGROK_AUTHTOKEN: ${{ secrets.NGROK_AUTH_TOKEN }}
+          NGROK_AUTH_TOKEN: ${{ secrets.NGROK_AUTH_TOKEN }}
 
       # Step 7: Wait for Ngrok and Output Public URL
       - name: Wait for Ngrok
         run: |
-          for i in {1..10}; do
-            NGROK_URL=$(curl -s http://127.0.0.1:4040/api/tunnels | jq -r '.tunnels[0].public_url')
-            if [[ "$NGROK_URL" == http* ]]; then
-              echo "Ngrok URL: $NGROK_URL"
-              echo "::set-output name=ngrok_url::$NGROK_URL"
-              exit 0
-            fi
-            echo "Waiting for Ngrok to start..."
-            sleep 5
-          done
-          echo "Ngrok failed to start" && exit 1
+          sleep 5
+          curl -s http://127.0.0.1:4040/api/tunnels | jq -r '.tunnels[0].public_url'
 
       - name: Verify Build Output
         run: |
