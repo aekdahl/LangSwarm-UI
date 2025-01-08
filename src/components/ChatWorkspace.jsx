@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import BACKEND_URL from "../config"; // Import the BACKEND_URL from config.js
+import { Link } from "react-router-dom"; // Ensure react-router-dom is installed
 
 const ChatWorkspace = () => {
   const [messages, setMessages] = useState([]);
@@ -67,9 +68,13 @@ const ChatWorkspace = () => {
           placeholder="Type your message..."
         />
         <button onClick={sendMessage} disabled={isLoading}>
-          🤖
+          Send
         </button>
       </div>
+      // Add this below the input and send button
+      <Link to="/logs" className="logs-link">
+        View Logs
+      </Link>
     </div>
   );
 };
