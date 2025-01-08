@@ -77,6 +77,12 @@ jobs:
           done
           echo "Ngrok failed to start" && exit 1
 
-      # Step 8: Output Ngrok Logs for Debugging (Optional)
+      # Step 8: Keep Workflow Running for 10 Minutes
+      - name: Keep Workflow Running
+        run: |
+          echo "Workflow will stay active for 10 minutes for previewing..."
+          sleep 600
+
+      # Step 9: Output Ngrok Logs for Debugging (Optional)
       - name: Debug Logs
         run: cat ngrok.log
