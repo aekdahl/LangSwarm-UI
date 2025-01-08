@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom"; // Ensure react-router-dom is installed
-import "./styles.css";
+import "../styles.css";
 
 const ChatWorkspace = () => {
   const [messages, setMessages] = useState([]);
