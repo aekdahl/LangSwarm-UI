@@ -13,38 +13,41 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Checkout the specified branch
+      # Step 1: Checkout the specified branch
       - name: Checkout Code
         uses: actions/checkout@v3
         with:
           ref: ${{ github.event.inputs.branch }}
 
-      # Set up Node.js
+      # Step 2: Set up Node.js
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 18
 
-      # Install dependencies and build the app
+      # Step 3: Install dependencies and build the React app
       - name: Install Dependencies
         run: npm ci
 
       - name: Build React App
         run: npm run build
 
-      # Serve the app locally
+      # Step 4: Start a local server to serve the React app
       - name: Start Local Server
         run: |
           npm install -g serve
           serve -s dist -l 5000 &
+        env:
+          NODE_ENV: production
 
-      # Expose the local server with Ngrok
+      # Step 5: Expose the local server using Ngrok
       - name: Expose Server with Ngrok
+        id: ngrok
         uses: kroeder/ngrok-action@v2
         with:
           auth_token: ${{ secrets.NGROK_AUTH_TOKEN }}
           port: 5000
 
-      # Output the Ngrok URL
+      # Step 6: Output the Ngrok URL
       - name: Show Preview URL
         run: echo "Ngrok preview is live at: ${{ steps.ngrok.outputs.ngrok_url }}"
