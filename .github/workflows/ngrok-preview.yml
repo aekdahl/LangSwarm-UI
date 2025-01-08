@@ -50,5 +50,5 @@ jobs:
           port: 5000
 
       # Step 7: Output the Ngrok preview URL
-      - name: Show Preview URL
-        run: echo "Ngrok preview is live at: ${{ steps.ngrok.outputs.ngrok_url }}"
+      #- name: Show Preview URL
+      #  run: echo "Ngrok preview is live at: ${{ steps.ngrok.outputs.ngrok_url }}"
