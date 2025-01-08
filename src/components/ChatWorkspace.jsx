@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom"; // Ensure react-router-dom is installed
+import { Link } from "react-router-dom";
 import "../styles.css";
 
 const ChatWorkspace = () => {
@@ -43,11 +43,22 @@ const ChatWorkspace = () => {
   };
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", padding: "20px" }}>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        padding: "20px",
+        width: "100%",
+        maxWidth: "1200px",
+        margin: "0 auto",
+      }}
+    >
       <h2>Chat with LLM</h2>
       <div
         style={{
-          width: "80%",
+          width: "100%",
+          maxWidth: "800px",
           height: "60vh",
           overflowY: "auto",
           border: "1px solid #ccc",
@@ -58,51 +69,4 @@ const ChatWorkspace = () => {
         }}
       >
         {messages.map((msg, idx) => (
-          <p key={idx} style={{ textAlign: msg.role === "user" ? "right" : "left" }}>
-            <b>{msg.role === "user" ? "You" : "Agent"}:</b> {msg.content}
-          </p>
-        ))}
-        {isLoading && <p style={{ color: "#007bff", fontStyle: "italic" }}>Agent is typing...</p>}
-      </div>
-      <div style={{ display: "flex", width: "80%" }}>
-        <input
-          type="text"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          placeholder="Type your message..."
-          disabled={isLoading}
-          style={{
-            flex: 3,
-            padding: "10px",
-            marginRight: "10px",
-            borderRadius: "10px",
-            border: "1px solid #ccc",
-            fontSize: "1rem",
-          }}
-        />
-        <button
-          onClick={sendMessage}
-          disabled={!input.trim() || isLoading}
-          style={{
-            flex: 1,
-            backgroundColor: !input.trim() || isLoading ? "#ddd" : "#000",
-            color: "#fff",
-            border: "none",
-            borderRadius: "10px",
-            cursor: !input.trim() || isLoading ? "not-allowed" : "pointer",
-            opacity: !input.trim() || isLoading ? 0.5 : 1,
-          }}
-        >
-          Send
-        </button>
-      </div>
-      <div style={{ marginTop: "20px" }}>
-        <Link to="/logs" style={{ color: "#007bff", textDecoration: "none", fontSize: "1rem" }}>
-          View Logs
-        </Link>
-      </div>
-    </div>
-  );
-};
-
-export default ChatWorkspace;
+          <p key={idx} style={{ textAlign: msg.role === "user"
