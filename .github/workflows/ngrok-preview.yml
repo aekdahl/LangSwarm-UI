@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Checkout the specified branch
+      # Step 1: Checkout Code
       - name: Checkout Code
         uses: actions/checkout@v3
         with:
@@ -25,17 +25,15 @@ jobs:
         with:
           node-version: 18
 
-      # Step 3: Add Missing Plugin and Install Dependencies
-      - name: Install Missing Dependencies
-        run: |
-          npm install @vitejs/plugin-react --save-dev
-          npm ci
+      # Step 3: Install Dependencies
+      - name: Install Dependencies
+        run: npm ci
 
       # Step 4: Build React App
       - name: Build React App
         run: npm run build
 
-      # Step 5: Start Local Server to Serve the React App
+      # Step 5: Start Local Server
       - name: Start Local Server
         run: |
           npm install -g serve
@@ -43,19 +41,31 @@ jobs:
         env:
           NODE_ENV: production
 
-      # Step 6: Install Ngrok and Expose Local Server
+      # Step 6: Install and Run Ngrok
       - name: Install and Run Ngrok
         run: |
           curl -s https://ngrok-agent.s3.amazonaws.com/ngrok.asc | sudo tee /etc/apt/trusted.gpg.d/ngrok.asc >/dev/null
           echo "deb https://ngrok-agent.s3.amazonaws.com buster main" | sudo tee /etc/apt/sources.list.d/ngrok.list >/dev/null
           sudo apt update && sudo apt install ngrok
-          ngrok config add-authtoken ${{ secrets.NGROK_AUTH_TOKEN }}
-          ngrok http 5000 > ngrok.log &
+          nohup ngrok http 5000 > ngrok.log 2>&1 &
         env:
           NGROK_AUTHTOKEN: ${{ secrets.NGROK_AUTH_TOKEN }}
 
-      # Step 7: Display the Ngrok Public URL
-      - name: Show Ngrok URL
+      # Step 7: Wait for Ngrok to Start
+      - name: Wait for Ngrok to Start
         run: |
-          sleep 5
-          curl -s http://127.0.0.1:4040/api/tunnels | jq -r '.tunnels[0].public_url'
+          for i in {1..10}; do
+            NGROK_URL=$(curl -s http://127.0.0.1:4040/api/tunnels | jq -r '.tunnels[0].public_url')
+            if [[ "$NGROK_URL" == http* ]]; then
+              echo "Ngrok URL: $NGROK_URL"
+              echo "::set-output name=ngrok_url::$NGROK_URL"
+              exit 0
+            fi
+            echo "Waiting for Ngrok to start..."
+            sleep 5
+          done
+          echo "Ngrok failed to start" && exit 1
+
+      # Step 8: Check Ngrok Logs
+      - name: Check Ngrok Logs
+        run: cat ngrok.log
