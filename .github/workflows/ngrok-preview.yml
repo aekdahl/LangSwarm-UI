@@ -25,15 +25,25 @@ jobs:
         with:
           node-version: 18
 
-      # Step 3: Install dependencies
-      - name: Install Dependencies
-        run: npm ci
+      # Step 3: Generate package-lock.json
+      - name: Install Dependencies and Generate Lockfile
+        run: npm install
 
-      # Step 4: Build React app
+      # Step 4: Commit package-lock.json (if not already present)
+      - name: Commit package-lock.json
+        if: success() && github.event.inputs.branch == 'main'
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add package-lock.json
+          git commit -m "Add/Update package-lock.json file [CI]"
+          git push origin ${{ github.event.inputs.branch }}
+
+      # Step 5: Build React app
       - name: Build React App
         run: npm run build
 
-      # Step 5: Start a local server to serve the React app
+      # Step 6: Start a local server to serve the React app
       - name: Start Local Server
         run: |
           npm install -g serve
@@ -41,7 +51,7 @@ jobs:
         env:
           NODE_ENV: production
 
-      # Step 6: Install Ngrok and Expose Local Server
+      # Step 7: Install Ngrok and Expose Local Server
       - name: Install and Run Ngrok
         run: |
           curl -s https://ngrok-agent.s3.amazonaws.com/ngrok.asc | sudo tee /etc/apt/trusted.gpg.d/ngrok.asc >/dev/null
@@ -52,7 +62,7 @@ jobs:
         env:
           NGROK_AUTHTOKEN: ${{ secrets.NGROK_AUTH_TOKEN }}
 
-      # Step 7: Display the Ngrok Public URL
+      # Step 8: Display the Ngrok Public URL
       - name: Show Ngrok URL
         run: |
           sleep 5 # Allow Ngrok to initialize
