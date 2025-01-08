@@ -78,7 +78,11 @@ jobs:
           echo "Ngrok failed to start" && exit 1
 
       - name: Verify Build Output
-        run: ls -R dist
+        run: |
+          echo "Build output structure:"
+          ls -R dist
+          echo "Contents of dist/index.html:"
+          cat dist/index.html
         
       # Step 8: Keep Workflow Running for 10 Minutes
       - name: Keep Workflow Running
