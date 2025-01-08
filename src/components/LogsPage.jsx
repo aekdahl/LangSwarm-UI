@@ -9,27 +9,6 @@ const LogsPage = () => {
     "Build successful!",
     "Deploying application...",
     "Deployment completed successfully.",
-    "---",
-    "Starting build process...",
-    "Fetching dependencies...",
-    "Building project...",
-    "Build successful!",
-    "Deploying application...",
-    "Deployment completed successfully.",
-    "---",
-    "Starting build process...",
-    "Fetching dependencies...",
-    "Building project...",
-    "Build successful!",
-    "Deploying application...",
-    "Deployment completed successfully.",
-    "---",
-    "Starting build process...",
-    "Fetching dependencies...",
-    "Building project...",
-    "Build successful!",
-    "Deploying application...",
-    "Deployment completed successfully.",
   ];
 
   return (
@@ -49,4 +28,3 @@ const LogsPage = () => {
 };
 
 export default LogsPage;
-
