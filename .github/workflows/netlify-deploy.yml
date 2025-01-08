@@ -1,0 +1,46 @@
+name: Netlify Deployment
+
+on:
+  workflow_dispatch: # Allow manual trigger
+    inputs:
+      branch:
+        description: "Branch to deploy from"
+        required: true
+        default: "main"
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout the specified branch
+      - name: Checkout Code
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.inputs.branch }}
+
+      # Set up Node.js
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      # Install dependencies and build the app
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Build React App
+        run: npm run build
+
+      # Deploy to Netlify
+      - name: Deploy to Netlify
+        uses: nwtgck/actions-netlify@v1
+        with:
+          publish-dir: dist
+          production-deploy: false
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+
+      # Output the Netlify preview URL
+      - name: Show Deployment Status
+        run: echo "Netlify preview is live. Check your Netlify dashboard for the preview link."
