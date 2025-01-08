@@ -69,4 +69,51 @@ const ChatWorkspace = () => {
         }}
       >
         {messages.map((msg, idx) => (
-          <p key={idx} style={{ textAlign: msg.role === "user"
+          <p key={idx} style={{ textAlign: msg.role === "user" ? "right" : "left" }}>
+            <b>{msg.role === "user" ? "You" : "Agent"}:</b> {msg.content}
+          </p>
+        ))}
+        {isLoading && <p style={{ color: "#007bff", fontStyle: "italic" }}>Agent is typing...</p>}
+      </div>
+      <div style={{ display: "flex", width: "100%", maxWidth: "800px" }}>
+        <input
+          type="text"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          placeholder="Type your message..."
+          disabled={isLoading}
+          style={{
+            flex: 3,
+            padding: "10px",
+            marginRight: "10px",
+            borderRadius: "10px",
+            border: "1px solid #ccc",
+            fontSize: "1rem",
+          }}
+        />
+        <button
+          onClick={sendMessage}
+          disabled={!input.trim() || isLoading}
+          style={{
+            flex: 1,
+            backgroundColor: !input.trim() || isLoading ? "#ddd" : "#000",
+            color: "#fff",
+            border: "none",
+            borderRadius: "10px",
+            cursor: !input.trim() || isLoading ? "not-allowed" : "pointer",
+            opacity: !input.trim() || isLoading ? 0.5 : 1,
+          }}
+        >
+          Send
+        </button>
+      </div>
+      <div style={{ marginTop: "20px" }}>
+        <Link to="/logs" style={{ color: "#007bff", textDecoration: "none", fontSize: "1rem" }}>
+          View Logs
+        </Link>
+      </div>
+    </div>
+  );
+};
+
+export default ChatWorkspace;
