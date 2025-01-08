@@ -1,9 +1,18 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 const ChatWorkspace = () => {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const chatEndRef = useRef(null);
+
+  const scrollToBottom = () => {
+    chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
 
   const sendMessage = async () => {
     if (!input.trim()) return;
@@ -40,27 +49,26 @@ const ChatWorkspace = () => {
   };
 
   return (
-    <div>
-      <h2>Chat with LLM</h2>
-      <div style={{ height: "60vh", overflowY: "scroll", border: "1px solid #ccc", padding: "1rem" }}>
+    <div className="chat-container">
+      <div className="chat-window">
         {messages.map((msg, idx) => (
-          <p key={idx} style={{ textAlign: msg.role === "user" ? "right" : "left" }}>
-            <b>{msg.role === "user" ? "You" : "Agent"}:</b> {msg.content}
-          </p>
+          <div key={idx} className={`message ${msg.role}`}>
+            <p>{msg.content}</p>
+          </div>
         ))}
-        {isLoading && <p>Agent is typing...</p>}
+        {isLoading && <p className="loading">Agent is typing...</p>}
+        <div ref={chatEndRef} />
       </div>
-      <input
-        type="text"
-        value={input}
-        onChange={(e) => setInput(e.target.value)}
-        placeholder="Type your message..."
-        disabled={isLoading}
-        style={{ width: "80%", marginRight: "1rem" }}
-      />
-      <button onClick={sendMessage} disabled={isLoading}>
-        Send
-      </button>
+      <div className="chat-input">
+        <textarea
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          placeholder="Type your message..."
+        />
+        <button onClick={sendMessage} disabled={isLoading}>
+          🤖
+        </button>
+      </div>
     </div>
   );
 };
