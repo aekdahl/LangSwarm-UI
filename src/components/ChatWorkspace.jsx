@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import BACKEND_URL from "../config"; // Import the BACKEND_URL from config.js
 
 const ChatWorkspace = () => {
   const [messages, setMessages] = useState([]);
@@ -22,7 +23,7 @@ const ChatWorkspace = () => {
     setIsLoading(true);
 
     try {
-      const response = await fetch("https://your-backend-url/api/chat", {
+      const response = await fetch(`${BACKEND_URL}/api/chat`, { // Use BACKEND_URL here
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: input }),
