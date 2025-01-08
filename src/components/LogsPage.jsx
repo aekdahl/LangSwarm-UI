@@ -2,27 +2,23 @@ import React from "react";
 import "./logs.css";
 
 const LogsPage = () => {
-  const mockLogs = [
-    "Starting build process...",
-    "Fetching dependencies...",
-    "Building project...",
-    "Build successful!",
-    "Deploying application...",
-    "Deployment completed successfully.",
+  // Mock log data
+  const logs = [
+    "[2025-01-08T12:00:00Z] Starting build process...",
+    "[2025-01-08T12:01:00Z] Installing dependencies...",
+    "[2025-01-08T12:02:00Z] Build successful.",
+    "[2025-01-08T12:03:00Z] Deploying to production...",
+    "[2025-01-08T12:04:00Z] Deployment successful. Application is live!",
   ];
 
   return (
     <div className="logs-container">
-      <header className="logs-header">
-        <h1>Logs</h1>
-      </header>
-      <main className="logs-main">
-        {mockLogs.map((log, index) => (
-          <pre key={index} className="log-entry">
-            {log}
-          </pre>
-        ))}
-      </main>
+      <h1>Logs</h1>
+      {logs.map((log, idx) => (
+        <div key={idx} className="log-entry">
+          {log}
+        </div>
+      ))}
     </div>
   );
 };
