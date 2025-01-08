@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Checkout Code
+      # Step 1: Checkout the specified branch
       - name: Checkout Code
         uses: actions/checkout@v3
         with:
@@ -25,32 +25,17 @@ jobs:
         with:
           node-version: 18
 
-      # Step 3: Ensure Critical Files
-      - name: Ensure Critical Files
+      # Step 3: Add Missing Plugin and Install Dependencies
+      - name: Install Missing Dependencies
         run: |
-          if [ ! -f package.json ]; then
-            echo "Missing package.json. Please create it manually."
-            exit 1
-          fi
-          if [ ! -f package-lock.json ]; then
-            npm install
-          fi
-          if [ ! -f vite.config.js ]; then
-            echo 'import { defineConfig } from "vite"; import react from "@vitejs/plugin-react"; export default defineConfig({ plugins: [react()] });' > vite.config.js
-          fi
-          if [ ! -f .env ]; then
-            echo 'REACT_APP_API_URL=http://localhost:3000' > .env
-          fi
+          npm install @vitejs/plugin-react --save-dev
+          npm ci
 
-      # Step 4: Install Dependencies
-      - name: Install Dependencies
-        run: npm ci
-
-      # Step 5: Build React App
+      # Step 4: Build React App
       - name: Build React App
         run: npm run build
 
-      # Step 6: Start Local Server
+      # Step 5: Start Local Server to Serve the React App
       - name: Start Local Server
         run: |
           npm install -g serve
@@ -58,7 +43,7 @@ jobs:
         env:
           NODE_ENV: production
 
-      # Step 7: Install Ngrok and Expose Local Server
+      # Step 6: Install Ngrok and Expose Local Server
       - name: Install and Run Ngrok
         run: |
           curl -s https://ngrok-agent.s3.amazonaws.com/ngrok.asc | sudo tee /etc/apt/trusted.gpg.d/ngrok.asc >/dev/null
@@ -69,7 +54,7 @@ jobs:
         env:
           NGROK_AUTHTOKEN: ${{ secrets.NGROK_AUTH_TOKEN }}
 
-      # Step 8: Display the Ngrok Public URL
+      # Step 7: Display the Ngrok Public URL
       - name: Show Ngrok URL
         run: |
           sleep 5
