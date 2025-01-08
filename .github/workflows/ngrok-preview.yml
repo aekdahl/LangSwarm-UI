@@ -1,7 +1,7 @@
 name: Ngrok Preview Deployment
 
 on:
-  workflow_dispatch: # Allow manual trigger
+  workflow_dispatch:
     inputs:
       branch:
         description: "Branch to build from"
@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Checkout the specified branch
+      # Step 1: Checkout Code
       - name: Checkout Code
         uses: actions/checkout@v3
         with:
@@ -25,25 +25,32 @@ jobs:
         with:
           node-version: 18
 
-      # Step 3: Generate package-lock.json
-      - name: Install Dependencies and Generate Lockfile
-        run: npm install
-
-      # Step 4: Commit package-lock.json (if not already present)
-      - name: Commit package-lock.json
-        if: success() && github.event.inputs.branch == 'main'
+      # Step 3: Ensure Critical Files
+      - name: Ensure Critical Files
         run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add package-lock.json
-          git commit -m "Add/Update package-lock.json file [CI]"
-          git push origin ${{ github.event.inputs.branch }}
+          if [ ! -f package.json ]; then
+            echo "Missing package.json. Please create it manually."
+            exit 1
+          fi
+          if [ ! -f package-lock.json ]; then
+            npm install
+          fi
+          if [ ! -f vite.config.js ]; then
+            echo 'import { defineConfig } from "vite"; import react from "@vitejs/plugin-react"; export default defineConfig({ plugins: [react()] });' > vite.config.js
+          fi
+          if [ ! -f .env ]; then
+            echo 'REACT_APP_API_URL=http://localhost:3000' > .env
+          fi
 
-      # Step 5: Build React app
+      # Step 4: Install Dependencies
+      - name: Install Dependencies
+        run: npm ci
+
+      # Step 5: Build React App
       - name: Build React App
         run: npm run build
 
-      # Step 6: Start a local server to serve the React app
+      # Step 6: Start Local Server
       - name: Start Local Server
         run: |
           npm install -g serve
@@ -65,5 +72,5 @@ jobs:
       # Step 8: Display the Ngrok Public URL
       - name: Show Ngrok URL
         run: |
-          sleep 5 # Allow Ngrok to initialize
+          sleep 5
           curl -s http://127.0.0.1:4040/api/tunnels | jq -r '.tunnels[0].public_url'
