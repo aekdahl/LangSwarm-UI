@@ -42,7 +42,7 @@ jobs:
 
       # Step 4: Build React App
       - name: Build React App
-        run: npm run build
+        run: npm run build || { echo "Build failed"; exit 1; }
 
       # Step 5: Start Local Server to Serve the React App
       - name: Start Local Server
