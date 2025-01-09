@@ -13,7 +13,7 @@ on:
         default: "v0.0.0"
       prerelease:
         description: "Prerelease?"
-        default: "false" # Dropdown selection mimics boolean
+        default: "true" # Dropdown selection mimics boolean
         type: choice
         options:
           - "false"
