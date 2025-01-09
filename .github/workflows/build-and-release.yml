@@ -119,7 +119,8 @@ jobs:
           prerelease: ${{ inputs.prerelease }}
 
       - name: Debug Release URL
-        run: echo "Release upload URL: ${{ steps.create_release.outputs.upload_url }}"
+        run: |
+          echo "Release upload URL: ${{ steps.create_release.outputs.upload_url }}"
   
       - name: Upload Zipped Release Asset
         uses: actions/upload-release-asset@v1
