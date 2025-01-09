@@ -85,7 +85,14 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: ${{ inputs.build }}
-          path: ./
+          path: .
+
+      - name: List Files for Debugging
+        run: |
+          echo "Current working directory:"
+          pwd
+          echo "Listing all files and folders:"
+          ls -R
       
       - name: Create GitHub Release
         id: create_release
