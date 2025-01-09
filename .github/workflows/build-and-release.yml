@@ -3,12 +3,16 @@ name: Build and Release React App
 on:
   workflow_dispatch: # Allow manual trigger
     inputs:
-      version:
-        description: "Version for the release (e.g., v1.0.0)"
+      build:
+        description: "Build name"
         required: true
-        default: "v1.0.0"
+        default: "frontend-build"
+      version:
+        description: "Version"
+        required: true
+        default: "v0.0.0"
       prerelease:
-        description: "Should the release be created as a prerelease?"
+        description: "Prerelease?"
         default: "false" # Dropdown selection mimics boolean
         type: choice
         options:
@@ -56,7 +60,7 @@ jobs:
       - name: Archive Build Artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: frontend-build
+          name: ${{ inputs.build }}
           path: dist/
 
   release:
@@ -70,7 +74,7 @@ jobs:
       - name: Download Build Artifacts
         uses: actions/download-artifact@v3
         with:
-          name: react-app-build
+          name: ${{ inputs.build }}
 
       - name: Create GitHub Release
         uses: ncipollo/release-action@v1
