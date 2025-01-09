@@ -87,14 +87,14 @@ jobs:
           name: ${{ inputs.build }}
           path: .
 
-      - name: Download artifact
-        uses: aochmann/actions-download-artifact@1.0.4
-        with:
-          # Artifact name (download all artifacts in not specified)
-          name: # optional
-          # Download latest artifact
-          # latest: # optional
-          # path: # optional, default is ./
+      #- name: Download artifact
+      #  uses: aochmann/actions-download-artifact@1.0.4
+      #  with:
+      #    # Artifact name (download all artifacts in not specified)
+      #    name: # optional
+      #    # Download latest artifact
+      #    # latest: # optional
+      #    # path: # optional, default is ./
 
       - name: Download workflow artifact
         uses: dawidd6/action-download-artifact@v7
