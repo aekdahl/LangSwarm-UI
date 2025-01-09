@@ -57,15 +57,11 @@ jobs:
       - name: Build React App
         run: npm run build
 
-      - name: Zip Build Files
-        run: |
-          cd dist && zip -r ../${{ inputs.build }} . && cd ..
-
-      - name: Upload Zipped Build Artifact
+      - name: Upload Build Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: build-artifact.zip
-          path: ./${{ inputs.build }}
+          name: ${{ inputs.build }}
+          path: dist/*
 
       - name: List Uploaded Artifacts
         run: |
@@ -88,8 +84,7 @@ jobs:
       - name: Download Build Artifact
         uses: actions/download-artifact@v3
         with:
-          name: build-artifact.zip
-          path: ./
+          name: ${{ inputs.build }}
       
       - name: Create GitHub Release
         id: create_release
