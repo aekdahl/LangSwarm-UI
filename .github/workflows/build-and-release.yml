@@ -6,7 +6,7 @@ on:
       build:
         description: "Build name"
         required: true
-        default: "frontend-build"
+        default: "frontend-build.zip"
       version:
         description: "Version"
         required: true
@@ -58,7 +58,7 @@ jobs:
         run: npm run build
 
       - name: Upload Build Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v3
         with:
           name: ${{ inputs.build }}
           path: dist/*
@@ -84,7 +84,7 @@ jobs:
       - name: Download Build Artifact
         uses: actions/download-artifact@v3
         with:
-          name: ${{ inputs.build }}.zip
+          name: ${{ inputs.build }}
       
       - name: Create GitHub Release
         id: create_release
