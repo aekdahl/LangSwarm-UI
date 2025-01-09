@@ -6,7 +6,7 @@ on:
       build:
         description: "Build name"
         required: true
-        default: "frontend-build.zip"
+        default: "frontend-build"
       version:
         description: "Version"
         required: true
@@ -84,7 +84,7 @@ jobs:
       - name: Download Build Artifact
         uses: actions/download-artifact@v3
         with:
-          name: ${{ inputs.build }}
+          name: ${{ inputs.build }}.zip
       
       - name: Create GitHub Release
         id: create_release
