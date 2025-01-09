@@ -58,7 +58,7 @@ jobs:
         run: npm run build
 
       - name: Upload Build Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v4.5.0
         with:
           name: ${{ inputs.build }}
           path: dist/*
@@ -82,10 +82,32 @@ jobs:
                https://api.github.com/repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts
 
       - name: Download Build Artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v4.1.8
         with:
           name: ${{ inputs.build }}
           path: .
+
+      - name: Download artifact
+        uses: aochmann/actions-download-artifact@1.0.4
+        with:
+          # Artifact name (download all artifacts in not specified)
+          name: # optional
+          # Download latest artifact
+          # latest: # optional
+          # path: # optional, default is ./
+
+      - name: Download workflow artifact
+        uses: dawidd6/action-download-artifact@v7
+        with:
+          # Artifact name (download all artifacts if not specified)
+          name: # optional
+          # Where to unpack the artifact
+          #path: # optional, default is ./
+          # Choose to skip unpacking the downloaded artifact(s)
+          #skip_unpack: # optional
+          # Check the existence of artifact(s) without downloading
+          #dry_run: # optional
+          if_no_artifact_found: warn # optional, default is fail
 
       - name: List Files for Debugging
         run: |
