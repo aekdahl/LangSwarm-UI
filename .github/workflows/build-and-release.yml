@@ -91,7 +91,7 @@ jobs:
         uses: dawidd6/action-download-artifact@v7
         with:
           # Artifact name (download all artifacts if not specified)
-          name: # optional
+          #name: # optional
           # Where to unpack the artifact
           #path: # optional, default is ./
           # Choose to skip unpacking the downloaded artifact(s)
@@ -118,9 +118,16 @@ jobs:
           draft: false
           prerelease: ${{ inputs.prerelease }}
 
-      - name: Debug Release URL
+      - name: Fix Specific File Extension
         run: |
-          echo "Release upload URL: ${{ steps.create_release.outputs.upload_url }}"
+          FILE="${{ inputs.build }}.zip"
+          TARGET="${{ inputs.build }}"
+          if [ -e "$FILE" ]; then
+            mv "$FILE" "$TARGET"
+            echo "Renamed $FILE to $TARGET"
+          else
+            echo "No $FILE found, skipping."
+          fi
   
       - name: Upload Zipped Release Asset
         uses: actions/upload-release-asset@v1
