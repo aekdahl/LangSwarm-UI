@@ -57,11 +57,15 @@ jobs:
       - name: Build React App
         run: npm run build
 
-      - name: Archive Build Artifacts
+      - name: Zip Build Files
+        run: |
+          cd dist && zip -r ../${{ inputs.build }} . && cd ..
+
+      - name: Upload Zipped Build Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ inputs.build }}
-          path: dist/
+          name: build-artifact
+          path: ./${{ inputs.build }}
 
   release:
     needs: build
@@ -71,11 +75,11 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v3
 
-      - name: Download Build Artifacts
+      - name: Download Build Artifact
         uses: actions/download-artifact@v3
         with:
-          name: ${{ inputs.build }}
-
+          name: build-artifact
+      
       - name: Create GitHub Release
         id: create_release
         uses: ncipollo/release-action@v1
@@ -87,7 +91,7 @@ jobs:
           draft: false
           prerelease: ${{ inputs.prerelease }}
 
-      - name: Upload Release Asset
+      - name: Upload Zipped Release Asset
         uses: actions/upload-release-asset@v1
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
