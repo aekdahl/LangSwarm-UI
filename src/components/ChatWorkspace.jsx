@@ -16,7 +16,7 @@ const ChatWorkspace = () => {
     setIsLoading(true);
 
     try {
-      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/chat`, {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/send-message`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: input }),
