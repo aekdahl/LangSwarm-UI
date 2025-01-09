@@ -118,8 +118,8 @@ jobs:
           draft: false
           prerelease: ${{ inputs.prerelease }}
 
-      - name: List Files
-        run: ls -R
+      - name: Debug Release URL
+        run: echo "Release upload URL: ${{ steps.create_release.outputs.upload_url }}"
   
       - name: Upload Zipped Release Asset
         uses: actions/upload-release-asset@v1
@@ -128,3 +128,5 @@ jobs:
           asset_path: ./${{ inputs.build }}
           asset_name: ${{ inputs.build }}
           asset_content_type: application/zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
