@@ -56,7 +56,7 @@ jobs:
       - name: Archive Build Artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: react-app-build
+          name: frontend-build
           path: dist/
 
   release:
