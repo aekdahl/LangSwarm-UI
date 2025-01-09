@@ -89,6 +89,7 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: build-artifact.zip
+          path: ./
       
       - name: Create GitHub Release
         id: create_release
