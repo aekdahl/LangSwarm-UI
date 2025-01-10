@@ -11,17 +11,21 @@ const ChatWorkspace = () => {
 
   const sendMessage = async () => {
     if (!input.trim()) return;
+    
+    const sender = "sessions_1234567879"; // Replace with dynamic sender info later
 
-    const userMessage = { role: "user", content: input };
+    const currentInput = input; // Store the current input value
+    const userMessage = { role: "user", content: currentInput };
     setMessages([...messages, userMessage]);
-    setInput("");
+    setInput(""); // Clear the input field
     setIsLoading(true);
 
     try {
       const response = await fetch(`${backendUrl}/send-message`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: input }),
+        //body: JSON.stringify({ message: input }),
+        body: JSON.stringify({ sender, content: currentInput }),
       });
 
       if (response.ok) {
