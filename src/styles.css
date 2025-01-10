@@ -19,8 +19,9 @@ body {
 
 .chat-window {
   display: flex;
-  flex-direction: column-reverse; /* Newest messages appear at the bottom */
+  flex-direction: column;
   justify-content: flex-start; /* Align at the top of reversed flow */
+  align-items: flex-start; /* Ensure proper alignment */
   width: 100%;
   max-width: 800px;
   height: 60vh;
@@ -30,6 +31,7 @@ body {
   background-color: #ffffff;
   padding: 1rem;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
 }
 
 .message {
