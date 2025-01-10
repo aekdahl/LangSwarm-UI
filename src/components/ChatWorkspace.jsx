@@ -34,7 +34,7 @@ const ChatWorkspace = () => {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         //body: JSON.stringify({ message: input }),
-        body: JSON.stringify({ sender, content: currentInput }),
+        body: JSON.stringify({ sender: sender, content: currentInput }),
       });
 
       if (response.ok) {
