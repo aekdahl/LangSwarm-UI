@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import "../styles.css";
 
+const backendUrl = window._env_.REACT_APP_BACKEND_URL || "http://localhost:8080";
+
 const ChatWorkspace = () => {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
@@ -16,7 +18,7 @@ const ChatWorkspace = () => {
     setIsLoading(true);
 
     try {
-      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/send-message`, {
+      const response = await fetch(`${backendUrl}/send-message`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: input }),
