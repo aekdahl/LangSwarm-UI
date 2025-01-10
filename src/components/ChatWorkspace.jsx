@@ -39,7 +39,7 @@ const ChatWorkspace = () => {
 
       if (response.ok) {
         const data = await response.json();
-        const agentMessage = { role: "agent", content: data.reply };
+        const agentMessage = { role: "agent", content: data };
         setMessages((prev) => [...prev, agentMessage]);
       } else {
         setMessages((prev) => [
@@ -73,19 +73,6 @@ const ChatWorkspace = () => {
       <div
         ref={chatWindowRef}
         className="chat-window"
-        style={{
-          display: "flex",
-          flexDirection: "column-reverse", // Reverse the message order
-          width: "100%",
-          maxWidth: "800px",
-          height: "60vh",
-          overflowY: "auto",
-          border: "1px solid #ccc",
-          borderRadius: "10px",
-          backgroundColor: "#fff",
-          padding: "10px",
-          marginBottom: "20px",
-        }}
       >
         {messages.map((msg, idx) => (
           <p key={idx} style={{ textAlign: msg.role === "user" ? "right" : "left" }}>
