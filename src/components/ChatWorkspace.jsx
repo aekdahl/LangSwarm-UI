@@ -62,7 +62,10 @@ const ChatWorkspace = () => {
     >
       <h2>Chat with LLM</h2>
       <div
+        className="chat-window"
         style={{
+          display: "flex",
+          flexDirection: "column-reverse", // Reverse the message order
           width: "100%",
           maxWidth: "800px",
           height: "60vh",
