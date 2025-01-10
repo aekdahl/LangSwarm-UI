@@ -1,13 +1,22 @@
-import React, { useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "../styles.css";
 
 const backendUrl = window._env_.REACT_APP_BACKEND_URL || "http://localhost:8080";
 
 const ChatWorkspace = () => {
+  const chatWindowRef = useRef(null);
+  
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    if (chatWindowRef.current) {
+      chatWindowRef.current.scrollTop = chatWindowRef.current.scrollHeight;
+    }
+  }, [messages]);
+
 
   const sendMessage = async () => {
     if (!input.trim()) return;
@@ -62,6 +71,7 @@ const ChatWorkspace = () => {
     >
       <h2>Chat with LLM</h2>
       <div
+        ref={chatWindowRef}
         className="chat-window"
         style={{
           display: "flex",
