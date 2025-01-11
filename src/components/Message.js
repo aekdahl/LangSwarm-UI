@@ -1,78 +1,81 @@
-// Message.js
-import React from "react";
+// Messages.js
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import ReactMarkdown from "react-markdown";
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { materialLight } from "react-syntax-highlighter/dist/esm/styles/prism";
 
+// Styled Components for Messages
 const MessageContainer = styled.div`
   padding: 10px;
   margin: 5px;
   border-radius: 10px;
   max-width: 80%;
-  align-self: ${(props) => (props.isUser ? "flex-end" : "flex-start")};
-  background-color: ${(props) => (props.isUser ? "#d1e7dd" : "#f8d7da")};
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  word-wrap: break-word;
+  white-space: pre-wrap; /* Preserves formatting like line breaks */
 `;
 
-const MarkdownMessage = styled.div`
-  font-family: Arial, sans-serif;
-  font-size: 0.95rem;
-  line-height: 1.5;
-
-  h1, h2, h3 {
-    margin: 0.5em 0;
-  }
-
-  p {
-    margin: 0.5em 0;
-  }
-
-  code {
-    background-color: #f1f1f1;
-    padding: 2px 4px;
-    border-radius: 4px;
-    font-family: "Courier New", Courier, monospace;
-  }
-
-  pre {
-    background-color: #f1f1f1;
-    padding: 10px;
-    border-radius: 5px;
-    overflow-x: auto;
-    font-family: "Courier New", Courier, monospace;
-  }
+const UserMessage = styled(MessageContainer)`
+  background-color: #d1e7dd;
+  align-self: flex-end;
 `;
 
-const Message = ({ text, isUser }) => {
+const BotMessage = styled(MessageContainer)`
+  background-color: #f8d7da;
+  align-self: flex-start;
+`;
+
+// Typewriter effect for smoother message rendering
+const TypewriterMessage = ({ message, onComplete, chunkSize = 5, speed = 50 }) => {
+  const [displayedText, setDisplayedText] = useState("");
+
+  useEffect(() => {
+    let index = 0;
+
+    const intervalId = setInterval(() => {
+      if (index < message.length) {
+        setDisplayedText((prev) => prev + message.slice(index, index + chunkSize));
+        index += chunkSize;
+      } else {
+        clearInterval(intervalId);
+        if (onComplete) onComplete();
+      }
+    }, speed);
+
+    return () => clearInterval(intervalId);
+  }, [message, chunkSize, speed, onComplete]);
+
+  return <div>{displayedText}</div>;
+};
+
+// Messages Component
+const Messages = ({ messages }) => {
   return (
-    <MessageContainer isUser={isUser}>
-      <MarkdownMessage>
-        <ReactMarkdown
-          components={{
-            code({ node, inline, className, children, ...props }) {
-              const match = /language-(\w+)/.exec(className || "");
-              return !inline && match ? (
-                <SyntaxHighlighter
-                  style={materialLight}
-                  language={match[1]}
-                  PreTag="div"
-                  {...props}
-                >
-                  {String(children).replace(/\n$/, "")}
-                </SyntaxHighlighter>
-              ) : (
-                <code {...props}>{children}</code>
-              );
-            },
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        overflowY: "auto",
+        padding: "10px",
+      }}
+    >
+      {messages.map((msg, index) => (
+        <div
+          key={index}
+          style={{
+            display: "flex",
+            justifyContent: msg.role === "user" ? "flex-end" : "flex-start",
           }}
         >
-          {text}
-        </ReactMarkdown>
-      </MarkdownMessage>
-    </MessageContainer>
+          {msg.role === "user" ? (
+            <UserMessage>
+              <TypewriterMessage message={msg.content} />
+            </UserMessage>
+          ) : (
+            <BotMessage>
+              <TypewriterMessage message={msg.content} />
+            </BotMessage>
+          )}
+        </div>
+      ))}
+    </div>
   );
 };
 
-export default Message;
+export default Messages;
