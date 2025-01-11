@@ -1,5 +1,6 @@
 import React, { useRef, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import Message from "./Message";
 import "../styles.css";
 
 const backendUrl = window._env_.REACT_APP_BACKEND_URL || "http://localhost:8080";
@@ -77,11 +78,18 @@ const ChatWorkspace = () => {
         className="chat-window"
       >
         {messages.map((msg, idx) => (
-          <p key={idx} style={{ textAlign: msg.role === "user" ? "right" : "left" }}>
-            <b>{msg.role === "user" ? "You" : "Agent"}:</b> {msg.content}
-          </p>
+          <Message
+            key={idx}
+            text={msg.content}
+            isUser={msg.role === "user"}
+          />
         ))}
-        {isLoading && <p style={{ color: "#007bff", fontStyle: "italic" }}>Agent is typing...</p>}
+        {isLoading && (
+          <Message
+            text="Agent is typing..."
+            isUser={false}
+          />
+        )}
       </div>
       <div style={{ display: "flex", width: "100%", maxWidth: "800px" }}>
         <input
