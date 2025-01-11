@@ -25,7 +25,8 @@ const ChatWorkspace = () => {
 
     const currentInput = input; // Store the current input value
     const userMessage = { role: "user", content: currentInput };
-    setMessages([...messages, userMessage]);
+    //setMessages([...messages, userMessage]);
+    setMessages((prev) => [...prev, userMessage]); // Append user message to the array
     setInput(""); // Clear the input field
     setIsLoading(true);
 
@@ -40,7 +41,8 @@ const ChatWorkspace = () => {
       if (response.ok) {
         const data = await response.text();
         const agentMessage = { role: "agent", content: data };
-        setMessages((prev) => [...prev, agentMessage]);
+        //setMessages((prev) => [...prev, agentMessage]);
+        setMessages((prev) => [...prev, agentMessage]); // Append user message to the array
       } else {
         setMessages((prev) => [
           ...prev,
