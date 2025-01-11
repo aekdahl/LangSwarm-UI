@@ -46,6 +46,10 @@ jobs:
             echo "Installing react-router-dom..."
             npm install react-router-dom --save-dev
           fi
+          if ! npm list styled-components > /dev/null 2>&1; then
+            echo "Installing styled-components..."
+            npm install styled-components --save-dev
+          fi
           if [ ! -f package-lock.json ]; then
             echo "Running npm install to generate lock file..."
             npm install
