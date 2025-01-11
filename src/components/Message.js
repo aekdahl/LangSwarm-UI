@@ -68,31 +68,7 @@ const Message = ({ text, isUser, typingSpeed = 50, onTypingComplete }) => {
 
   return (
     <MessageContainer isUser={isUser}>
-      <MarkdownMessage>
-        <ReactMarkdown
-          components={{
-            code({ node, inline, className, children, ...props }) {
-              const match = /language-(\w+)/.exec(className || "");
-              return !inline && match ? (
-                <div>
-                <SyntaxHighlighter
-                  style={materialLight}
-                  language={match[1]}
-                  PreTag="div"
-                  {...props}
-                >
-                  {<div>String(children).replace(/\n$/, "")</div>}
-                </SyntaxHighlighter>
-                </div>
-              ) : (
-                <code {...props}>{children}</code>
-              );
-            },
-          }}
-        >
-          {displayedText}
-        </ReactMarkdown>
-      </MarkdownMessage>
+      
     </MessageContainer>
   );
 };
