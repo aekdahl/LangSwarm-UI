@@ -77,19 +77,7 @@ const ChatWorkspace = () => {
         ref={chatWindowRef}
         className="chat-window"
       >
-        {messages.map((msg, idx) => (
-          <Message
-            key={idx}
-            text={msg.content}
-            isUser={msg.role === "user"}
-          />
-        ))}
-        {isLoading && (
-          <Message
-            text="Agent is typing..."
-            isUser={false}
-          />
-        )}
+        <Messages messages={messages} isLoading={isLoading} />
       </div>
       <div style={{ display: "flex", width: "100%", maxWidth: "800px" }}>
         <input
