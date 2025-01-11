@@ -45,7 +45,9 @@ const Messages = ({ messages, isLoading }) => {
     <MessagesContainer ref={containerRef}>
       {messages.map((msg, index) => (
         <MessageWrapper key={index} isUser={msg.role === "user"}>
-          <MessageBubble isUser={msg.role === "user"}>{msg.content}</MessageBubble>
+          <MessageBubble isUser={msg.role === "user"}>
+            {msg.content || "Message content is missing"} {/* Fallback if content is undefined */}
+          </MessageBubble>
         </MessageWrapper>
       ))}
       {isLoading && <TypingMessage>Agent is typing...</TypingMessage>}
