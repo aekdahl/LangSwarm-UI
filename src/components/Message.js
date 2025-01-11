@@ -81,7 +81,7 @@ const Message = ({ text, isUser, typingSpeed = 50, onTypingComplete }) => {
                   PreTag="div"
                   {...props}
                 >
-                  {String(children).replace(/\n$/, "")}
+                  {<div>String(children).replace(/\n$/, "")</div>}
                 </SyntaxHighlighter>
                 </div>
               ) : (
