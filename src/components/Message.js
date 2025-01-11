@@ -27,9 +27,7 @@ const Messages = ({ messages }) => {
     <>
       {messages.map((msg, index) => (
         <MessageWrapper key={index} isUser={msg.role === "user"}>
-          <MessageBubble>
             {msg.content || "Message content is missing"} {/* Fallback if content is undefined */}
-          </MessageBubble>
         </MessageWrapper>
       ))}
     </>
