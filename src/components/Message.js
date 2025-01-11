@@ -1,14 +1,12 @@
-// Messages.js
-import React, { useState, useEffect } from "react";
+import React from "react";
 import styled from "styled-components";
 
-// Styled Components for Messages
 const MessageContainer = styled.div`
   padding: 10px;
   margin: 5px;
   border-radius: 10px;
   max-width: 80%;
-  white-space: pre-wrap; /* Preserves formatting like line breaks */
+  white-space: pre-wrap;
 `;
 
 const UserMessage = styled(MessageContainer)`
@@ -21,40 +19,15 @@ const BotMessage = styled(MessageContainer)`
   align-self: flex-start;
 `;
 
-// Typewriter effect for smoother message rendering
-const TypewriterMessage = ({ message, onComplete, chunkSize = 5, speed = 50 }) => {
-  const [displayedText, setDisplayedText] = useState("");
+const TypingMessage = styled.div`
+  font-style: italic;
+  color: #007bff;
+  align-self: flex-start;
+`;
 
-  useEffect(() => {
-    let index = 0;
-
-    const intervalId = setInterval(() => {
-      if (index < message.length) {
-        setDisplayedText((prev) => prev + message.slice(index, index + chunkSize));
-        index += chunkSize;
-      } else {
-        clearInterval(intervalId);
-        if (onComplete) onComplete();
-      }
-    }, speed);
-
-    return () => clearInterval(intervalId);
-  }, [message, chunkSize, speed, onComplete]);
-
-  return <div>{displayedText}</div>;
-};
-
-// Messages Component
-const Messages = ({ messages }) => {
+const Messages = ({ messages, isLoading }) => {
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        overflowY: "auto",
-        padding: "10px",
-      }}
-    >
+    <div style={{ display: "flex", flexDirection: "column", overflowY: "auto", padding: "10px" }}>
       {messages.map((msg, index) => (
         <div
           key={index}
@@ -64,16 +37,13 @@ const Messages = ({ messages }) => {
           }}
         >
           {msg.role === "user" ? (
-            <UserMessage>
-              <TypewriterMessage message={msg.content} />
-            </UserMessage>
+            <UserMessage>{msg.content}</UserMessage>
           ) : (
-            <BotMessage>
-              <TypewriterMessage message={msg.content} />
-            </BotMessage>
+            <BotMessage>{msg.content}</BotMessage>
           )}
         </div>
       ))}
+      {isLoading && <TypingMessage>Agent is typing...</TypingMessage>}
     </div>
   );
 };
