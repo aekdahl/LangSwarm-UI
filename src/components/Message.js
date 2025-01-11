@@ -67,9 +67,7 @@ const Message = ({ text, isUser, typingSpeed = 50, onTypingComplete }) => {
   }, [text, isUser, typingSpeed, onTypingComplete]);
 
   return (
-    <MessageContainer isUser={isUser}>
-      
-    </MessageContainer>
+    <div></div>
   );
 };
 
