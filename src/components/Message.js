@@ -1,50 +1,55 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import styled from "styled-components";
 
-const MessageContainer = styled.div`
+const MessagesContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end; /* Ensure messages start at the bottom */
+  height: 100%;
+  overflow-y: auto;
   padding: 10px;
-  margin: 5px;
+  box-sizing: border-box;
+`;
+
+const MessageWrapper = styled.div`
+  display: flex;
+  justify-content: ${(props) => (props.isUser ? "flex-end" : "flex-start")};
+  margin-bottom: 10px;
+`;
+
+const MessageBubble = styled.div`
+  max-width: 50%; /* Limit messages to half the chat window width */
+  padding: 10px;
   border-radius: 10px;
-  max-width: 80%;
+  background-color: ${(props) => (props.isUser ? "#d1e7dd" : "#f8d7da")};
   white-space: pre-wrap;
-`;
-
-const UserMessage = styled(MessageContainer)`
-  background-color: #d1e7dd;
-  align-self: flex-end;
-`;
-
-const BotMessage = styled(MessageContainer)`
-  background-color: #f8d7da;
-  align-self: flex-start;
+  text-align: ${(props) => (props.isUser ? "right" : "left")};
 `;
 
 const TypingMessage = styled.div`
   font-style: italic;
   color: #007bff;
-  align-self: flex-start;
+  margin: 5px 0;
 `;
 
 const Messages = ({ messages, isLoading }) => {
+  const containerRef = useRef(null);
+
+  useEffect(() => {
+    if (containerRef.current) {
+      containerRef.current.scrollTop = containerRef.current.scrollHeight;
+    }
+  }, [messages, isLoading]);
+
   return (
-    <div style={{ display: "flex", flexDirection: "column", overflowY: "auto", padding: "10px" }}>
+    <MessagesContainer ref={containerRef}>
       {messages.map((msg, index) => (
-        <div
-          key={index}
-          style={{
-            display: "flex",
-            justifyContent: msg.role === "user" ? "flex-end" : "flex-start",
-          }}
-        >
-          {msg.role === "user" ? (
-            <UserMessage>{msg.content}</UserMessage>
-          ) : (
-            <BotMessage>{msg.content}</BotMessage>
-          )}
-        </div>
+        <MessageWrapper key={index} isUser={msg.role === "user"}>
+          <MessageBubble isUser={msg.role === "user"}>{msg.content}</MessageBubble>
+        </MessageWrapper>
       ))}
       {isLoading && <TypingMessage>Agent is typing...</TypingMessage>}
-    </div>
+    </MessagesContainer>
   );
 };
 
