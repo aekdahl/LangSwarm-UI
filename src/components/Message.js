@@ -74,6 +74,7 @@ const Message = ({ text, isUser, typingSpeed = 50, onTypingComplete }) => {
             code({ node, inline, className, children, ...props }) {
               const match = /language-(\w+)/.exec(className || "");
               return !inline && match ? (
+                <div>
                 <SyntaxHighlighter
                   style={materialLight}
                   language={match[1]}
@@ -82,6 +83,7 @@ const Message = ({ text, isUser, typingSpeed = 50, onTypingComplete }) => {
                 >
                   {String(children).replace(/\n$/, "")}
                 </SyntaxHighlighter>
+                </div>
               ) : (
                 <code {...props}>{children}</code>
               );
