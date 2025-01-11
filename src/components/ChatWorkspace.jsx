@@ -38,7 +38,7 @@ const ChatWorkspace = () => {
       });
 
       if (response.ok) {
-        const data = await response.json();
+        const data = await response.text();
         const agentMessage = { role: "agent", content: data };
         setMessages((prev) => [...prev, agentMessage]);
       } else {
