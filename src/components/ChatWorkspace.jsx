@@ -73,11 +73,15 @@ const ChatWorkspace = () => {
       }}
     >
       <h2>Chat with LLM</h2>
-      <div
-        ref={chatWindowRef}
-        className="chat-window"
-      >
-        <Messages messages={messages} isLoading={isLoading} />
+      <div ref={chatWindowRef} className="chat-window">
+        {messages.map((msg, idx) => (
+          <Message
+            key={idx}
+            text={msg.content}
+            isUser={msg.role === "user"}
+            typingSpeed={30} // Customize the typing speed if needed
+          />
+        ))}
       </div>
       <div style={{ display: "flex", width: "100%", maxWidth: "800px" }}>
         <input
