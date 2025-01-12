@@ -40,8 +40,21 @@ const ChatWorkspace = () => {
       });
 
       if (response.ok) {
-        const data = await response.text();
-        const agentMessage = { role: "agent", content: data };
+        const rawData = await response.text();
+        console.log("Raw response from backend:", rawData); // Log raw response
+
+        // Parse the response (if needed) and log parsed content
+        let parsedData;
+        try {
+          parsedData = JSON.parse(rawData);
+          console.log("Parsed data from backend:", parsedData);
+        } catch (parseError) {
+          console.error("Error parsing backend response as JSON:", parseError);
+        }
+        
+        // Add the agent's response to the chat
+        const agentMessage = { role: "agent", content: parsedData?.reply || rawData };
+        // const agentMessage = { role: "agent", content: data };
         //setMessages((prev) => [...prev, agentMessage]);
         setMessages((prev) => [...prev, agentMessage]); // Append user message to the array
       } else {
