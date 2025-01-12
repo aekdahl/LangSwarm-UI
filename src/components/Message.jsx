@@ -10,11 +10,16 @@ const MessageContainer = styled.div`
   padding: 10px;
   margin: 5px;
   border-radius: 10px;
-  max-width: 80%;
+  max-width: ${(props) => (props.isUser ? "50%" : "100%")};
   align-self: ${(props) => (props.isUser ? "flex-end" : "flex-start")};
   background-color: ${(props) => (props.isUser ? "#d1e7dd" : "#f8d7da")};
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   word-wrap: break-word;
+  margin-left: ${(props) => (props.isUser ? "auto" : "0")};
+  margin-right: ${(props) => (props.isUser ? "0" : "auto")};
+  text-align: ${(props) => (props.isUser ? "right" : "left")};
+  float: ${(props) => (props.isUser ? "right" : "left")};
+  clear: both; /* Ensure each message starts on a new line */
 `;
 
 const MarkdownMessage = styled.div`
