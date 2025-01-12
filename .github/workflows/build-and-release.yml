@@ -77,7 +77,8 @@ jobs:
       - name: Zip Build Artifact
         run: |
           rm -rf artifact && mkdir artifact
-          zip -r artifact/${{ inputs.build }} dist/*
+          cd dist
+          zip -r ../artifact/${{ inputs.build }} ./*
       
       - name: Create GitHub Release
         id: create_release
