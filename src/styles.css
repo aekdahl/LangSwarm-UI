@@ -18,7 +18,7 @@ body {
 }
 
 .chat-window {
-  display: flex;
+  display: block; /* flex; */
   flex-direction: column;
   justify-content: flex-start; /* Align at the top of reversed flow */
   align-items: flex-start; /* Ensure proper alignment */
