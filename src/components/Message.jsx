@@ -84,9 +84,6 @@ const Message = ({ text, isUser, typingSpeed = 50, onTypingComplete }) => {
   return (
     <MessageContainer isUser={isUser}>
       <MarkdownMessage>
-        {isTyping ? (
-          <span>{displayedText}</span>
-        ) : (
           <ReactMarkdown
             remarkPlugins={[remarkGfm]} // Enables GitHub Flavored Markdown
             components={{
@@ -115,7 +112,6 @@ const Message = ({ text, isUser, typingSpeed = 50, onTypingComplete }) => {
           >
             {displayedText.replace(/\\n/g, "\n")} {/* Convert \n to actual newlines */}
           </ReactMarkdown>
-        )}
       </MarkdownMessage>
     </MessageContainer>
   );
