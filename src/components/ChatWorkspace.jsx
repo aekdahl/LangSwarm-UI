@@ -74,6 +74,13 @@ const ChatWorkspace = () => {
     }
   };
 
+  const handleInputKeyPress = (e) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage();
+    }
+  };
+
   return (
     <div
       style={{
@@ -99,11 +106,11 @@ const ChatWorkspace = () => {
         {isLoading && <LoadingIndicator isUser={false} />}
       </div>
       <div style={{ display: "flex", width: "100%", maxWidth: "800px" }}>
-        <input
-          type="text"
+        <textarea
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          placeholder="Type your message..."
+          onKeyDown={handleInputKeyPress}
+          placeholder="Type your message... (Shift + Enter for new line)"
           disabled={isLoading}
           style={{
             flex: 3,
@@ -112,6 +119,9 @@ const ChatWorkspace = () => {
             borderRadius: "10px",
             border: "1px solid #ccc",
             fontSize: "1rem",
+            resize: "none",
+            height: "80px", // Adjust for consistent height
+            lineHeight: "1.5",
           }}
         />
         <button
