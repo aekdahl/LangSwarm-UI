@@ -1,6 +1,7 @@
 import React, { useRef, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Message from "./Message";
+import LoadingIndicator from "./LoadingIndicator"; // Adjust the import path
 import "../styles.css";
 
 const backendUrl = window._env_.REACT_APP_BACKEND_URL || "http://localhost:8080";
@@ -95,6 +96,7 @@ const ChatWorkspace = () => {
             typingSpeed={30} // Customize the typing speed if needed
           />
         ))}
+        {isLoading && <LoadingIndicator isUser={false} />}
       </div>
       <div style={{ display: "flex", width: "100%", maxWidth: "800px" }}>
         <input
