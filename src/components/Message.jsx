@@ -89,20 +89,72 @@ const Message = ({ text, isUser, typingSpeed = 50, onTypingComplete }) => {
   return (
   <>
     <MessageContainer isUser={isUser}>
-      {displayedText}
-    </MessageContainer>
-    <MessageContainer isUser={isUser}>
       <MarkdownMessage>
-        {displayedText}
+        {isUser ? (
+          // Directly display user text without Markdown parsing
+          <p>{displayedText}</p>
+        ) : (
+          // Use ReactMarkdown for agent responses
+          <ReactMarkdown>
+            {displayedText} 
+          </ReactMarkdown>
+        )}
       </MarkdownMessage>
     </MessageContainer>
+    
     <MessageContainer isUser={isUser}>
       <MarkdownMessage>
-        <ReactMarkdown>
-          {displayedText}
-        </ReactMarkdown>
+        {isUser ? (
+          // Directly display user text without Markdown parsing
+          <p>{displayedText}</p>
+        ) : (
+          // Use ReactMarkdown for agent responses
+          <ReactMarkdown>
+            {displayedText?.replace(/\\n/g, "\n")} {/* Convert \n to actual newlines */}
+          </ReactMarkdown>
+        )}
       </MarkdownMessage>
     </MessageContainer>
+
+    <MessageContainer isUser={isUser}>
+      <MarkdownMessage>
+        {isUser ? (
+          // Directly display user text without Markdown parsing
+          <p>{displayedText}</p>
+        ) : (
+          // Use ReactMarkdown for agent responses
+          <ReactMarkdown
+            components={{
+              code({ node, inline, className, children, ...props }) {
+                const match = /language-(\w+)/.exec(className || "");
+                return !inline && match ? (
+                  <SyntaxHighlighter
+                    style={materialLight}
+                    language={match[1]}
+                    PreTag="div"
+                    {...props}
+                  >
+                    {String(children).trim()}
+                  </SyntaxHighlighter>
+                ) : (
+                  <code {...props}>{children}</code>
+                );
+              },
+              paragraph({ node, children }) {
+                console.log("Rendering paragraph:", children);
+                return <p>{children || "No content"}</p>;
+              },
+              break() {
+                return <br />;
+              },
+            }}
+          >
+            {displayedText}
+          </ReactMarkdown>
+        )}
+      </MarkdownMessage>
+    </MessageContainer>
+    
     <MessageContainer isUser={isUser}>
       <MarkdownMessage>
         {isUser ? (
