@@ -73,55 +73,11 @@ jobs:
       - name: Build React App
         run: npm run build
 
-      - name: Upload Build Artifact
-        uses: actions/upload-artifact@v4.5.0
-        with:
-          name: ${{ inputs.build }}
-          path: dist/*
-
-      - name: List Uploaded Artifacts
+      # Step 5: Clean and Zip the build
+      - name: Zip Build Artifact
         run: |
-          curl -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-               https://api.github.com/repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts
-
-  release:
-    needs: build
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v3
-
-      - name: List Uploaded Artifacts
-        run: |
-          curl -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-               https://api.github.com/repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts
-
-      #- name: Download Build Artifact
-      #  uses: actions/download-artifact@v4.1.8
-      #  with:
-      #    name: ${{ inputs.build }}
-      #    path: .
-
-      - name: Download workflow artifact
-        uses: dawidd6/action-download-artifact@v7
-        with:
-          # Artifact name (download all artifacts if not specified)
-          #name: # optional
-          # Where to unpack the artifact
-          #path: # optional, default is ./
-          # Choose to skip unpacking the downloaded artifact(s)
-          skip_unpack: true # optional
-          # Check the existence of artifact(s) without downloading
-          #dry_run: # optional
-          #if_no_artifact_found: warn # optional, default is fail
-
-      - name: List Files for Debugging
-        run: |
-          echo "Current working directory:"
-          pwd
-          echo "Listing all files and folders:"
-          ls -R
+          rm -rf artifact && mkdir artifact
+          zip -r artifact/${{ inputs.build }} dist/*
       
       - name: Create GitHub Release
         id: create_release
@@ -133,24 +89,25 @@ jobs:
             🚀 New release for version ${{ inputs.version }}.          
           draft: false
           prerelease: ${{ inputs.prerelease }}
-
-      - name: Fix Specific File Extension
-        run: |
-          FILE="${{ inputs.build }}.zip"
-          TARGET="${{ inputs.build }}"
-          if [ -e "$FILE" ]; then
-            mv "$FILE" "$TARGET"
-            echo "Renamed $FILE to $TARGET"
-          else
-            echo "No $FILE found, skipping."
-          fi
   
       - name: Upload Zipped Release Asset
         uses: actions/upload-release-asset@v1
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./${{ inputs.build }}
+          asset_path: artifact/${{ inputs.build }}
           asset_name: ${{ inputs.build }}
           asset_content_type: application/zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: List Files for Debugging
+        run: |
+          echo "Current working directory:"
+          pwd
+          echo "Listing all files and folders:"
+          ls -R
+          
+      - name: List Uploaded Artifacts
+        run: |
+          curl -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+               https://api.github.com/repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts
