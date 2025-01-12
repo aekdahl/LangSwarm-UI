@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { materialLight } from "react-syntax-highlighter/dist/esm/styles/prism";
 
@@ -20,9 +21,7 @@ const MarkdownMessage = styled.div`
   font-size: 0.95rem;
   line-height: 1.5;
 
-  h1,
-  h2,
-  h3 {
+  h1, h2, h3 {
     margin: 0.5em 0;
   }
 
@@ -47,10 +46,10 @@ const MarkdownMessage = styled.div`
 `;
 
 const Message = ({ text, isUser, typingSpeed = 50, onTypingComplete }) => {
-  const [displayedText, setDisplayedText] = useState(isUser ? text : ""); // Display full text for user messages immediately
+  const [displayedText, setDisplayedText] = useState(isUser ? text : "");
 
   useEffect(() => {
-    if (isUser) return; // Skip typewriter effect for user messages
+    if (isUser) return;
 
     let index = 0;
     const interval = setInterval(() => {
@@ -59,31 +58,30 @@ const Message = ({ text, isUser, typingSpeed = 50, onTypingComplete }) => {
         index++;
       } else {
         clearInterval(interval);
-        if (onTypingComplete) onTypingComplete(); // Notify parent when typing is complete
+        if (onTypingComplete) onTypingComplete();
       }
     }, typingSpeed);
 
-    return () => clearInterval(interval); // Cleanup interval on unmount
+    return () => clearInterval(interval);
   }, [text, isUser, typingSpeed, onTypingComplete]);
 
   return (
     <MessageContainer isUser={isUser}>
       <MarkdownMessage>
         <ReactMarkdown
+          remarkPlugins={[remarkGfm]}
           components={{
             code({ node, inline, className, children, ...props }) {
               const match = /language-(\w+)/.exec(className || "");
               return !inline && match ? (
-                <div>
                 <SyntaxHighlighter
                   style={materialLight}
                   language={match[1]}
                   PreTag="div"
                   {...props}
                 >
-                  {<div>String(children).replace(/\n$/, "")</div>}
+                  {String(children).replace(/\n$/, "")}
                 </SyntaxHighlighter>
-                </div>
               ) : (
                 <code {...props}>{children}</code>
               );
