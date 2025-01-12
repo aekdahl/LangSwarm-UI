@@ -62,10 +62,6 @@ jobs:
             echo "Installing remark-gfm..."
             npm install remark-gfm --save-dev
           fi
-          if ! npm list rehype-raw > /dev/null 2>&1; then
-            echo "Installing rehype-raw..."
-            npm install rehype-raw --save-dev
-          fi
           if [ ! -f package-lock.json ]; then
             echo "Running npm install to generate lock file..."
             npm install
