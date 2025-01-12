@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import rehypeRaw from "rehype-raw"; // Enables raw HTML parsing
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { materialLight } from "react-syntax-highlighter/dist/esm/styles/prism";
 
@@ -27,6 +28,11 @@ const MarkdownMessage = styled.div`
 
   p {
     margin: 0.5em 0;
+  }
+
+  ul, ol {
+    margin: 0.5em 0;
+    padding-left: 1.5em;
   }
 
   code {
@@ -69,7 +75,8 @@ const Message = ({ text, isUser, typingSpeed = 50, onTypingComplete }) => {
     <MessageContainer isUser={isUser}>
       <MarkdownMessage>
         <ReactMarkdown
-          remarkPlugins={[remarkGfm]}
+          remarkPlugins={[remarkGfm]} // Enables GitHub Flavored Markdown
+          rehypePlugins={[rehypeRaw]} // Parses raw HTML inside Markdown
           components={{
             code({ node, inline, className, children, ...props }) {
               const match = /language-(\w+)/.exec(className || "");
