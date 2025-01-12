@@ -59,6 +59,7 @@ const Message = ({ text, isUser, typingSpeed = 50, onTypingComplete }) => {
   const [displayedText, setDisplayedText] = useState(isUser ? text : "");
 
   useEffect(() => {
+    console.log("Text received by Message component:", text);
     if (isUser) {
       setDisplayedText(text); // User messages display immediately
       return;
@@ -68,7 +69,7 @@ const Message = ({ text, isUser, typingSpeed = 50, onTypingComplete }) => {
     let accumulated = ""; // Accumulate text progressively
 
     const interval = setInterval(() => {
-      if (index < text.length) {
+      if (index < text?.length) {
         accumulated += text[index];
         setDisplayedText(accumulated);
         index++;
@@ -81,37 +82,41 @@ const Message = ({ text, isUser, typingSpeed = 50, onTypingComplete }) => {
     return () => clearInterval(interval);
   }, [text, isUser, typingSpeed, onTypingComplete]);
 
+  useEffect(() => {
+    console.log("Displayed Text:", displayedText);
+  }, [displayedText]);
+
   return (
     <MessageContainer isUser={isUser}>
       <MarkdownMessage>
-          <ReactMarkdown
-            remarkPlugins={[remarkGfm]} // Enables GitHub Flavored Markdown
-            components={{
-              code({ node, inline, className, children, ...props }) {
-                const match = /language-(\w+)/.exec(className || "");
-                return !inline && match ? (
-                  <SyntaxHighlighter
-                    style={materialLight}
-                    language={match[1]}
-                    PreTag="div"
-                    {...props}
-                  >
-                    {String(children).replace(/\n$/, "")}
-                  </SyntaxHighlighter>
-                ) : (
-                  <code {...props}>{children}</code>
-                );
-              },
-              paragraph({ node, children }) {
-                return <p>{children}</p>; // Handle paragraphs explicitly
-              },
-              break() {
-                return <br />; // Handle line breaks (\n)
-              },
-            }}
-          >
-            {displayedText.replace(/\\n/g, "\n")} {/* Convert \n to actual newlines */}
-          </ReactMarkdown>
+        <ReactMarkdown
+          remarkPlugins={[remarkGfm]} // Enables GitHub Flavored Markdown
+          components={{
+            code({ node, inline, className, children, ...props }) {
+              const match = /language-(\w+)/.exec(className || "");
+              return !inline && match ? (
+                <SyntaxHighlighter
+                  style={materialLight}
+                  language={match[1]}
+                  PreTag="div"
+                  {...props}
+                >
+                  {String(children).replace(/\n$/, "")}
+                </SyntaxHighlighter>
+              ) : (
+                <code {...props}>{children}</code>
+              );
+            },
+            paragraph({ node, children }) {
+              return <p>{children}</p>; // Handle paragraphs explicitly
+            },
+            break() {
+              return <br />; // Handle line breaks (\n)
+            },
+          }}
+        >
+          {displayedText?.replace(/\\n/g, "\n")} {/* Convert \n to actual newlines */}
+        </ReactMarkdown>
       </MarkdownMessage>
     </MessageContainer>
   );
