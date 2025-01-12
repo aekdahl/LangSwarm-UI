@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import rehypeRaw from "rehype-raw"; // Enables raw HTML parsing
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { materialLight } from "react-syntax-highlighter/dist/esm/styles/prism";
 
@@ -84,7 +83,6 @@ const Message = ({ text, isUser, typingSpeed = 50, onTypingComplete }) => {
         ) : (
           <ReactMarkdown
             remarkPlugins={[remarkGfm]} // Enables GitHub Flavored Markdown
-            rehypePlugins={[rehypeRaw]} // Parses raw HTML inside Markdown
             components={{
               code({ node, inline, className, children, ...props }) {
                 const match = /language-(\w+)/.exec(className || "");
@@ -101,9 +99,15 @@ const Message = ({ text, isUser, typingSpeed = 50, onTypingComplete }) => {
                   <code {...props}>{children}</code>
                 );
               },
+              paragraph({ node, children }) {
+                return <p>{children}</p>; // Handle paragraphs explicitly
+              },
+              break() {
+                return <br />; // Handle line breaks (\n)
+              },
             }}
           >
-            {displayedText}
+            {displayedText.replace(/\\n/g, "\n")} {/* Convert \n to actual newlines */}
           </ReactMarkdown>
         )}
       </MarkdownMessage>
