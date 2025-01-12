@@ -79,29 +79,33 @@ const Message = ({ text, isUser, typingSpeed = 50, onTypingComplete }) => {
   return (
     <MessageContainer isUser={isUser}>
       <MarkdownMessage>
-        <ReactMarkdown
-          remarkPlugins={[remarkGfm]} // Enables GitHub Flavored Markdown
-          rehypePlugins={[rehypeRaw]} // Parses raw HTML inside Markdown
-          components={{
-            code({ node, inline, className, children, ...props }) {
-              const match = /language-(\w+)/.exec(className || "");
-              return !inline && match ? (
-                <SyntaxHighlighter
-                  style={materialLight}
-                  language={match[1]}
-                  PreTag="div"
-                  {...props}
-                >
-                  {String(children).replace(/\n$/, "")}
-                </SyntaxHighlighter>
-              ) : (
-                <code {...props}>{children}</code>
-              );
-            },
-          }}
-        >
-          {displayedText}
-        </ReactMarkdown>
+        {isTyping ? (
+          <span>{displayedText}</span>
+        ) : (
+          <ReactMarkdown
+            remarkPlugins={[remarkGfm]} // Enables GitHub Flavored Markdown
+            rehypePlugins={[rehypeRaw]} // Parses raw HTML inside Markdown
+            components={{
+              code({ node, inline, className, children, ...props }) {
+                const match = /language-(\w+)/.exec(className || "");
+                return !inline && match ? (
+                  <SyntaxHighlighter
+                    style={materialLight}
+                    language={match[1]}
+                    PreTag="div"
+                    {...props}
+                  >
+                    {String(children).replace(/\n$/, "")}
+                  </SyntaxHighlighter>
+                ) : (
+                  <code {...props}>{children}</code>
+                );
+              },
+            }}
+          >
+            {displayedText}
+          </ReactMarkdown>
+        )}
       </MarkdownMessage>
     </MessageContainer>
   );
