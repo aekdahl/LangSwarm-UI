@@ -58,6 +58,10 @@ jobs:
             echo "Installing react-syntax-highlighter..."
             npm install react-syntax-highlighter --save-dev
           fi
+          if ! npm list remark-gfm > /dev/null 2>&1; then
+            echo "Installing remark-gfm..."
+            npm install remark-gfm --save-dev
+          fi
           if [ ! -f package-lock.json ]; then
             echo "Running npm install to generate lock file..."
             npm install
