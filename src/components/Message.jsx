@@ -59,16 +59,22 @@ const Message = ({ text, isUser, typingSpeed = 50, onTypingComplete }) => {
   const [displayedText, setDisplayedText] = useState(isUser ? text : "");
 
   useEffect(() => {
-    if (isUser) return;
+    if (isUser) {
+      setDisplayedText(text); // User messages display immediately
+      return;
+    }
 
     let index = 0;
+    let accumulated = ""; // Accumulate text progressively
+
     const interval = setInterval(() => {
       if (index < text.length) {
-        setDisplayedText((prev) => prev + text[index]);
+        accumulated += text[index];
+        setDisplayedText(accumulated);
         index++;
       } else {
         clearInterval(interval);
-        if (onTypingComplete) onTypingComplete();
+        if (onTypingComplete) onTypingComplete(); // Notify when typing is complete
       }
     }, typingSpeed);
 
