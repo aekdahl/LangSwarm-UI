@@ -120,8 +120,6 @@ const Message = ({ text, isUser, typingSpeed = 50, onTypingComplete }) => {
               },
             }}
           >
-            {displayedText}
-
             {typeof displayedText === "string"
     ? displayedText.replace(/\\n/g, "\n") // Replace literal \n with actual newlines
     : ""}
