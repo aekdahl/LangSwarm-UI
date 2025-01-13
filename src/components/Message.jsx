@@ -58,6 +58,14 @@ const MarkdownMessage = styled.div`
 
 const Message = ({ text, isUser, typingSpeed = 50, onTypingComplete, chatWindowRef }) => {
   const [displayedText, setDisplayedText] = useState(isUser ? text : "");
+  const [copied, setCopied] = useState(false); // Track copy state
+
+  const handleCopy = (code) => {
+    navigator.clipboard.writeText(code).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000); // Reset after 2 seconds
+    });
+  };
 
   useEffect(() => {
     // console.log("Text received by Message component:", text);
@@ -95,16 +103,6 @@ const Message = ({ text, isUser, typingSpeed = 50, onTypingComplete, chatWindowR
 
     return () => clearInterval(interval);
   }, [text, isUser, typingSpeed, onTypingComplete, chatWindowRef]);
-
-  const CodeBlockWithCopy = ({ language, value }) => {
-  const [copied, setCopied] = useState(false);
-
-  const handleCopy = () => {
-    navigator.clipboard.writeText(value).then(() => {
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000); // Reset to "Copy" after 2 seconds
-    });
-  };
     
   return (    
     <MessageContainer isUser={isUser}>
@@ -117,7 +115,8 @@ const Message = ({ text, isUser, typingSpeed = 50, onTypingComplete, chatWindowR
           <ReactMarkdown
             remarkPlugins={[remarkGfm]} // Enables GitHub Flavored Markdown
             components={{
-              code({ node, inline, className, children, ...props }) {               
+              code({ node, inline, className, children, ...props }) { 
+                const codeContent = String(children).replace(/\\(.)/g, "$1");
                 //console.log("inline:", inline);
                 //console.log("className:", className);
                 const match = /language-(\w+)/.exec(className || "");
@@ -126,7 +125,7 @@ const Message = ({ text, isUser, typingSpeed = 50, onTypingComplete, chatWindowR
                 return !inline && match ? (
                   <div style={{ position: "relative", padding: "10px 0" }}>
                     <button
-                      onClick={handleCopy}
+                      onClick={() => handleCopy(codeContent)}
                       style={{
                         position: "absolute",
                         top: "10px",
