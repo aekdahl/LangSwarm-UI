@@ -67,6 +67,16 @@ jobs:
             npm ci
           fi
 
+      - name: Generate Config File
+        run: |
+          echo "Generating config.js file..."
+          mkdir -p src
+          cat <<EOF > src/config.js
+          window._env_ = {
+            REACT_APP_BACKEND_URL: "${{ github.event.inputs.backend }}"
+          };
+          EOF
+
       # Step 4: Build React App
       - name: Build React App
         run: npm run build || { echo "Build failed"; exit 1; }
