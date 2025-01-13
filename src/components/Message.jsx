@@ -65,12 +65,36 @@ const Message = ({ text, isUser, typingSpeed = 50, onTypingComplete, chatWindowR
       return;
     }
 
+    const words = text.split(" "); // Split the text into words
     let index = 0;
     let accumulated = ""; // Accumulate text progressively
 
     const interval = setInterval(() => {
-      if (index < text?.length) {
-        accumulated += text[index];
+      if (index < words.length) {
+        accumulated += (index > 0 ? " " : "") + words[index];
+        setDisplayedText(accumulated);
+
+        // Scroll chat window
+        if (chatWindowRef?.current) {
+          chatWindowRef.current.scrollTop = chatWindowRef.current.scrollHeight;
+        }
+        
+        index++;
+      } else {
+        clearInterval(interval);
+        if (onTypingComplete) onTypingComplete(); // Notify when typing is complete
+      }
+    }, typingSpeed); // Adjust speed for words
+
+    const interval = setInterval(() => {
+      // Use these for word by word output
+      if (index < words?.length) {
+        accumulated += (index > 0 ? " " : "") + words[index];
+      // Use these for char by char output
+      //if (index < text?.length) {
+      //  accumulated += text[index];
+
+      // Do not edit below for the setting above
         setDisplayedText(accumulated);
 
         // Scroll chat window
