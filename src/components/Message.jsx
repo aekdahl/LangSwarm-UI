@@ -59,7 +59,7 @@ const Message = ({ text, isUser, typingSpeed = 50, onTypingComplete }) => {
   const [displayedText, setDisplayedText] = useState(isUser ? text : "");
 
   useEffect(() => {
-    console.log("Text received by Message component:", text);
+    // console.log("Text received by Message component:", text);
     if (isUser) {
       setDisplayedText(text); // User messages display immediately
       return;
@@ -82,40 +82,7 @@ const Message = ({ text, isUser, typingSpeed = 50, onTypingComplete }) => {
     return () => clearInterval(interval);
   }, [text, isUser, typingSpeed, onTypingComplete]);
 
-  useEffect(() => {
-    console.log("Displayed Text:", displayedText);
-  }, [displayedText]);
-
-  return (
-  <>
-    <MessageContainer isUser={isUser}>
-      <MarkdownMessage>
-        {isUser ? (
-          // Directly display user text without Markdown parsing
-          <p>{displayedText}</p>
-        ) : (
-          // Use ReactMarkdown for agent responses
-          <ReactMarkdown>
-            {displayedText} 
-          </ReactMarkdown>
-        )}
-      </MarkdownMessage>
-    </MessageContainer>
-    
-    <MessageContainer isUser={isUser}>
-      <MarkdownMessage>
-        {isUser ? (
-          // Directly display user text without Markdown parsing
-          <p>{displayedText}</p>
-        ) : (
-          // Use ReactMarkdown for agent responses
-          <ReactMarkdown>
-            {displayedText?.replace(/\\n/g, "\n")} {/* Convert \n to actual newlines */}
-          </ReactMarkdown>
-        )}
-      </MarkdownMessage>
-    </MessageContainer>
-
+  return (    
     <MessageContainer isUser={isUser}>
       <MarkdownMessage>
         {isUser ? (
@@ -124,6 +91,7 @@ const Message = ({ text, isUser, typingSpeed = 50, onTypingComplete }) => {
         ) : (
           // Use ReactMarkdown for agent responses
           <ReactMarkdown
+            remarkPlugins={[remarkGfm]} // Enables GitHub Flavored Markdown
             components={{
               code({ node, inline, className, children, ...props }) {
                 const match = /language-(\w+)/.exec(className || "");
@@ -134,47 +102,7 @@ const Message = ({ text, isUser, typingSpeed = 50, onTypingComplete }) => {
                     PreTag="div"
                     {...props}
                   >
-                    {String(children).trim()}
-                  </SyntaxHighlighter>
-                ) : (
-                  <code {...props}>{children}</code>
-                );
-              },
-              paragraph({ node, children }) {
-                console.log("Rendering paragraph:", children);
-                return <p>{children || "No content"}</p>;
-              },
-              break() {
-                return <br />;
-              },
-            }}
-          >
-            {displayedText}
-          </ReactMarkdown>
-        )}
-      </MarkdownMessage>
-    </MessageContainer>
-    
-    <MessageContainer isUser={isUser}>
-      <MarkdownMessage>
-        {isUser ? (
-          // Directly display user text without Markdown parsing
-          <p>{displayedText}</p>
-        ) : (
-          // Use ReactMarkdown for agent responses
-          <ReactMarkdown
-            //remarkPlugins={[remarkGfm]} // Enables GitHub Flavored Markdown
-            components={{
-              code({ node, inline, className, children, ...props }) {
-                const match = /language-(\w+)/.exec(className || "");
-                return !inline && match ? (
-                  <SyntaxHighlighter
-                    style={materialLight}
-                    language={match[1]}
-                    PreTag="div"
-                    {...props}
-                  >
-                    {String(children).replace(/\n$/, "")}
+                    {String(children)}
                   </SyntaxHighlighter>
                 ) : (
                   <code {...props}>{children}</code>
@@ -188,12 +116,11 @@ const Message = ({ text, isUser, typingSpeed = 50, onTypingComplete }) => {
               },
             }}
           >
-            {displayedText?.replace(/\\n/g, "\n")} {/* Convert \n to actual newlines */}
+            {displayedText}
           </ReactMarkdown>
         )}
       </MarkdownMessage>
     </MessageContainer>
-  </>
   );
 };
 
