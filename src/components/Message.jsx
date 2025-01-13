@@ -119,10 +119,10 @@ const Message = ({ text, isUser, typingSpeed = 50, onTypingComplete, chatWindowR
                     PreTag="div"
                     {...props}
                   >
-                    {String(children).replace(/\\n$/, "")}
+                    {String(children).replace(/\\(.)/g, "$1")}
                   </SyntaxHighlighter>
                 ) : (
-                  <code {...props}>{children}</code>
+                  <code {...props}>{String(children).replace(/\\(.)/g, "$1")}</code>
                 );
               },
               paragraph({ node, children }) {
