@@ -77,6 +77,7 @@ const ChatWorkspace = () => {
       ]);
     } finally {
       setIsLoading(false);
+      textareaRef.current?.focus(); // Ensure the textarea stays focused
     }
   };
 
