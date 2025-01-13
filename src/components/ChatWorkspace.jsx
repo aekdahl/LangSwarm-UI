@@ -15,9 +15,12 @@ const ChatWorkspace = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    if (chatWindowRef.current) {
-      chatWindowRef.current.scrollTop = chatWindowRef.current.scrollHeight;
-    }
+    const timeout = setTimeout(() => {
+      if (chatWindowRef.current) {
+        chatWindowRef.current.scrollTop = chatWindowRef.current.scrollHeight;
+      }
+    }, 0);
+    return () => clearTimeout(timeout);
   }, [messages]);
 
 
