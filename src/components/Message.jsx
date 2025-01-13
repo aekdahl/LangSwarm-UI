@@ -70,23 +70,6 @@ const Message = ({ text, isUser, typingSpeed = 50, onTypingComplete, chatWindowR
     let accumulated = ""; // Accumulate text progressively
 
     const interval = setInterval(() => {
-      if (index < words.length) {
-        accumulated += (index > 0 ? " " : "") + words[index];
-        setDisplayedText(accumulated);
-
-        // Scroll chat window
-        if (chatWindowRef?.current) {
-          chatWindowRef.current.scrollTop = chatWindowRef.current.scrollHeight;
-        }
-        
-        index++;
-      } else {
-        clearInterval(interval);
-        if (onTypingComplete) onTypingComplete(); // Notify when typing is complete
-      }
-    }, typingSpeed); // Adjust speed for words
-
-    const interval = setInterval(() => {
       // Use these for word by word output
       if (index < words?.length) {
         accumulated += (index > 0 ? " " : "") + words[index];
