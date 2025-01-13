@@ -55,7 +55,7 @@ const MarkdownMessage = styled.div`
   }
 `;
 
-const Message = ({ text, isUser, typingSpeed = 50, onTypingComplete }) => {
+const Message = ({ text, isUser, typingSpeed = 50, onTypingComplete, chatWindowRef }) => {
   const [displayedText, setDisplayedText] = useState(isUser ? text : "");
 
   useEffect(() => {
@@ -72,6 +72,12 @@ const Message = ({ text, isUser, typingSpeed = 50, onTypingComplete }) => {
       if (index < text?.length) {
         accumulated += text[index];
         setDisplayedText(accumulated);
+
+        // Scroll chat window
+        if (chatWindowRef?.current) {
+          chatWindowRef.current.scrollTop = chatWindowRef.current.scrollHeight;
+        }
+        
         index++;
       } else {
         clearInterval(interval);
@@ -80,7 +86,7 @@ const Message = ({ text, isUser, typingSpeed = 50, onTypingComplete }) => {
     }, typingSpeed);
 
     return () => clearInterval(interval);
-  }, [text, isUser, typingSpeed, onTypingComplete]);
+  }, [text, isUser, typingSpeed, onTypingComplete, chatWindowRef]);
 
   return (    
     <MessageContainer isUser={isUser}>
