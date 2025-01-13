@@ -62,6 +62,10 @@ jobs:
             echo "Installing remark-gfm..."
             npm install remark-gfm --save-dev
           fi
+          if ! npm list react-icons > /dev/null 2>&1; then
+            echo "Installing react-icons..."
+            npm install react-icons --save-dev
+          fi
           if [ ! -f package-lock.json ]; then
             echo "Running npm install to generate lock file..."
             npm install
