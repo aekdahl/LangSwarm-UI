@@ -94,7 +94,11 @@ const Message = ({ text, isUser, typingSpeed = 50, onTypingComplete }) => {
             remarkPlugins={[remarkGfm]} // Enables GitHub Flavored Markdown
             components={{
               code({ node, inline, className, children, ...props }) {
+                console.log("inline:", inline);
+                console.log("className:", className);
                 const match = /language-(\w+)/.exec(className || "");
+                console.log("match:", match);
+                
                 return !inline && match ? (
                   <SyntaxHighlighter
                     style={materialLight}
@@ -117,6 +121,10 @@ const Message = ({ text, isUser, typingSpeed = 50, onTypingComplete }) => {
             }}
           >
             {displayedText}
+
+            {typeof displayedText === "string"
+    ? displayedText.replace(/\\n/g, "\n") // Replace literal \n with actual newlines
+    : ""}
           </ReactMarkdown>
         )}
       </MarkdownMessage>
