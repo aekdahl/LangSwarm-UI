@@ -3,7 +3,8 @@ import styled from "styled-components";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { materialLight } from "react-syntax-highlighter/dist/esm/styles/prism";
+import { github } from "react-syntax-highlighter/dist/esm/styles/prism";
+import { FaCopy } from "react-icons/fa"; // Import copy icon from react-icons
 
 const MessageContainer = styled.div`
   padding: 5px 10px;
@@ -95,6 +96,16 @@ const Message = ({ text, isUser, typingSpeed = 50, onTypingComplete, chatWindowR
     return () => clearInterval(interval);
   }, [text, isUser, typingSpeed, onTypingComplete, chatWindowRef]);
 
+  const CodeBlockWithCopy = ({ language, value }) => {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(value).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000); // Reset to "Copy" after 2 seconds
+    });
+  };
+    
   return (    
     <MessageContainer isUser={isUser}>
       <MarkdownMessage>
@@ -106,21 +117,46 @@ const Message = ({ text, isUser, typingSpeed = 50, onTypingComplete, chatWindowR
           <ReactMarkdown
             remarkPlugins={[remarkGfm]} // Enables GitHub Flavored Markdown
             components={{
-              code({ node, inline, className, children, ...props }) {
-                console.log("inline:", inline);
-                console.log("className:", className);
+              code({ node, inline, className, children, ...props }) {               
+                //console.log("inline:", inline);
+                //console.log("className:", className);
                 const match = /language-(\w+)/.exec(className || "");
-                console.log("match:", match);
+                //console.log("match:", match);
                 
                 return !inline && match ? (
-                  <SyntaxHighlighter
-                    style={materialLight}
-                    language={match[1]}
-                    PreTag="div"
-                    {...props}
-                  >
-                    {String(children).replace(/\\(.)/g, "$1")}
-                  </SyntaxHighlighter>
+                  <div style={{ position: "relative", padding: "10px 0" }}>
+                    <button
+                      onClick={handleCopy}
+                      style={{
+                        position: "absolute",
+                        top: "10px",
+                        right: "10px",
+                        background: copied ? "#4caf50" : "#000",
+                        color: "#fff",
+                        border: "none",
+                        borderRadius: "5px",
+                        padding: "5px 10px",
+                        cursor: "pointer",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "5px",
+                        zIndex: 1,
+                      }}
+                    >
+                      {copied ? "Copied!" : <>
+                        <FaCopy size={14} />
+                        Copy
+                      </>}
+                    </button>
+                    <SyntaxHighlighter
+                      style={github}
+                      language={match[1]}
+                      PreTag="div"
+                      {...props}
+                    >
+                      {String(children).replace(/\\(.)/g, "$1")}
+                    </SyntaxHighlighter>
+                  </div>
                 ) : (
                   <code {...props}>{String(children).replace(/\\(.)/g, "$1")}</code>
                 );
