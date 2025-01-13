@@ -3,7 +3,7 @@ import styled from "styled-components";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { github } from "react-syntax-highlighter/dist/esm/styles/prism";
+import { ghcolors } from "react-syntax-highlighter/dist/esm/styles/prism";
 import { FaCopy } from "react-icons/fa"; // Import copy icon from react-icons
 
 const MessageContainer = styled.div`
@@ -148,7 +148,7 @@ const Message = ({ text, isUser, typingSpeed = 50, onTypingComplete, chatWindowR
                       </>}
                     </button>
                     <SyntaxHighlighter
-                      style={github}
+                      style={ghcolors}
                       language={match[1]}
                       PreTag="div"
                       {...props}
