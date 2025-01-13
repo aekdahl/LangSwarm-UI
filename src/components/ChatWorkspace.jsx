@@ -19,7 +19,7 @@ const ChatWorkspace = () => {
       if (chatWindowRef.current) {
         chatWindowRef.current.scrollTop = chatWindowRef.current.scrollHeight;
       }
-    }, 0);
+    }, 50); // Small delay to ensure typewriter effect progress is included
     return () => clearTimeout(timeout);
   }, [messages]);
 
