@@ -119,7 +119,7 @@ const Message = ({ text, isUser, typingSpeed = 50, onTypingComplete, chatWindowR
                     PreTag="div"
                     {...props}
                   >
-                    {String(children)}
+                    {String(children).replace(/\\n$/, "")}
                   </SyntaxHighlighter>
                 ) : (
                   <code {...props}>{children}</code>
@@ -133,9 +133,7 @@ const Message = ({ text, isUser, typingSpeed = 50, onTypingComplete, chatWindowR
               },
             }}
           >
-            {typeof displayedText === "string"
-    ? displayedText.replace(/\\n/g, "\n") // Replace literal \n with actual newlines
-    : ""}
+            {typeof displayedText === "string" ? displayedText.replace(/\\n/g, "\n") : ""}
           </ReactMarkdown>
         )}
       </MarkdownMessage>
