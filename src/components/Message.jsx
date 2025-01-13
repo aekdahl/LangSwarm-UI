@@ -11,8 +11,8 @@ const MessageContainer = styled.div`
   border-radius: 10px;
   max-width: ${(props) => (props.isUser ? "50%" : "100%")};
   align-self: ${(props) => (props.isUser ? "flex-end" : "flex-start")};
-  background-color: ${(props) => (props.isUser ? "#d1e7dd" : "#f8d7da")};
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  background-color: ${(props) => (props.isUser ? "#E0E0E0" : "#ffffff")};
+  /* box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); */
   word-wrap: break-word;
   margin-left: ${(props) => (props.isUser ? "auto" : "0")};
   margin-right: ${(props) => (props.isUser ? "0" : "auto")};
