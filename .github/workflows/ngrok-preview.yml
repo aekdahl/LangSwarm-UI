@@ -70,8 +70,8 @@ jobs:
       - name: Generate Config File
         run: |
           echo "Generating config.js file..."
-          mkdir -p src
-          cat <<EOF > src/config.js
+          mkdir -p public
+          cat <<EOF > public/config.js
           window._env_ = {
             REACT_APP_BACKEND_URL: "${{ github.event.inputs.backend }}"
           };
