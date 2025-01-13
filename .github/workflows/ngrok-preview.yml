@@ -39,6 +39,22 @@ jobs:
             echo "Installing react-router-dom..."
             npm install react-router-dom --save-dev
           fi
+          if ! npm list styled-components > /dev/null 2>&1; then
+            echo "Installing styled-components..."
+            npm install styled-components --save-dev
+          fi
+          if ! npm list react-markdown > /dev/null 2>&1; then
+            echo "Installing react-markdown..."
+            npm install react-markdown --save-dev
+          fi
+          if ! npm list react-syntax-highlighter > /dev/null 2>&1; then
+            echo "Installing react-syntax-highlighter..."
+            npm install react-syntax-highlighter --save-dev
+          fi
+          if ! npm list remark-gfm > /dev/null 2>&1; then
+            echo "Installing remark-gfm..."
+            npm install remark-gfm --save-dev
+          fi
           if [ ! -f package-lock.json ]; then
             echo "Running npm install to generate lock file..."
             npm install
