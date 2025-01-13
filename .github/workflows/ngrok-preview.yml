@@ -7,6 +7,10 @@ on:
         description: "Branch to build from"
         required: true
         default: "main"
+      backend:
+        description: "URL for backend"
+        required: true
+        default: "https://langswarm-backend-128520073.europe-west1.run.app"
 
 jobs:
   build-and-preview:
@@ -20,7 +24,7 @@ jobs:
           ref: ${{ github.event.inputs.branch }}
 
       - name: Set Environment Variables
-        run: echo "REACT_APP_BACKEND_URL=https://your-backend-url" >> $GITHUB_ENV
+        run: echo "REACT_APP_BACKEND_URL=${{ github.event.inputs.branch }}" >> $GITHUB_ENV
 
       # Step 2: Set up Node.js
       - name: Set up Node.js
@@ -85,6 +89,7 @@ jobs:
           ngrok http 5000 > ngrok.log 2>&1 &
         env:
           NGROK_AUTH_TOKEN: ${{ secrets.NGROK_AUTH_TOKEN }}
+          REACT_APP_BACKEND_URL: ${{ github.event.inputs.branch }}
 
       # Step 7: Wait for Ngrok and Output Public URL
       - name: Wait for Ngrok
