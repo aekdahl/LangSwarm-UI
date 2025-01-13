@@ -51,13 +51,13 @@ const ChatWorkspace = () => {
 
       if (response.ok) {
         const rawData = await response.text();
-        console.log("Raw response from backend:", rawData); // Log raw response
+        //console.log("Raw response from backend:", rawData); // Log raw response
 
         // Parse the response (if needed) and log parsed content
         let parsedData;
         try {
           parsedData = JSON.parse(rawData);
-          console.log("Parsed data from backend:", parsedData);
+          //console.log("Parsed data from backend:", parsedData);
         } catch (parseError) {
           console.error("Error parsing backend response as JSON:", parseError);
         }
