@@ -8,6 +8,7 @@ const backendUrl = window._env_.REACT_APP_BACKEND_URL || "http://localhost:8080"
 
 const ChatWorkspace = () => {
   const chatWindowRef = useRef(null);
+  const textareaRef = useRef(null); // Create a ref for the textarea
   
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
@@ -31,6 +32,11 @@ const ChatWorkspace = () => {
     setMessages((prev) => [...prev, userMessage]); // Append user message to the array
     setInput(""); // Clear the input field
     setIsLoading(true);
+
+    // Keep focus on the textarea
+    if (textareaRef.current) {
+      textareaRef.current.focus();
+    }
 
     try {
       const response = await fetch(`${backendUrl}/send-message`, {
@@ -107,6 +113,7 @@ const ChatWorkspace = () => {
       </div>
       <div style={{ display: "flex", width: "100%", maxWidth: "800px" }}>
         <textarea
+          ref={textareaRef} // Attach the ref to the textarea
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={handleInputKeyPress}
