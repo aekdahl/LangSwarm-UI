@@ -25,7 +25,7 @@ const IndicatorWrapper = styled.div`
   margin: 5px;
   font-size: 1rem;
   color: #007bff;
-  font-weight: 600;
+  /* font-weight: 600; */
 `;
 
 const Dots = styled.span`
