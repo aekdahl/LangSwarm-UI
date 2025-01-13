@@ -113,7 +113,8 @@ const ChatWorkspace = () => {
             key={idx}
             text={msg.content}
             isUser={msg.role === "user"}
-            typingSpeed={30} // Customize the typing speed if needed
+            typingSpeed={40} // Customize the typing speed if needed
+            chatWindowRef={chatWindowRef} // Pass ref as a prop
           />
         ))}
         {isLoading && <LoadingIndicator isUser={false} />}
