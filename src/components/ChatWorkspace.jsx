@@ -36,10 +36,10 @@ const ChatWorkspace = () => {
     setInput(""); // Clear the input field
     setIsLoading(true);
 
-    // Keep focus on the textarea
-    if (textareaRef.current) {
-      textareaRef.current.focus();
-    }
+    // Focus the textarea with a slight delay after clearing input
+    setTimeout(() => {
+      textareaRef.current?.focus();
+    }, 0);
 
     try {
       const response = await fetch(`${backendUrl}/send-message`, {
@@ -80,7 +80,10 @@ const ChatWorkspace = () => {
       ]);
     } finally {
       setIsLoading(false);
-      textareaRef.current?.focus(); // Ensure the textarea stays focused
+      // Focus the textarea with a slight delay after clearing input
+      setTimeout(() => {
+        textareaRef.current?.focus();
+      }, 0);
     }
   };
 
